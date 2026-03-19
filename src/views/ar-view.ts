@@ -47,6 +47,9 @@ export async function initARView(): Promise<void> {
     mindarThree = new MindARThree({
       container,
       imageTargetSrc: DEMO_TARGET,
+      uiLoading: 'no',
+      uiScanning: 'no',
+      uiError: 'no',
     });
 
     const { renderer, scene, camera } = mindarThree;
