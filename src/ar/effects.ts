@@ -19,10 +19,10 @@ export function animateParticles(points: THREE.Points, delta: number): void {
     arr[i3 + 2] = (arr[i3 + 2] ?? 0) + vz * delta * 60;
 
     // Reset particles that go too high
-    if ((arr[i3 + 1] ?? 0) > 0.8) {
-      arr[i3] = (Math.random() - 0.5) * 0.8;
+    if ((arr[i3 + 1] ?? 0) > 0.5) {
+      arr[i3] = (Math.random() - 0.5) * 0.5;
       arr[i3 + 1] = 0;
-      arr[i3 + 2] = (Math.random() - 0.5) * 0.3;
+      arr[i3 + 2] = (Math.random() - 0.5) * 0.1 + 0.05;
     }
   }
 
@@ -39,7 +39,7 @@ export function animateRing(ring: THREE.Mesh, time: number): void {
 }
 
 export function animateTitle(sprite: THREE.Sprite, time: number): void {
-  sprite.position.y = 0.65 + Math.sin(time * 1.5) * 0.03;
+  sprite.position.y = 0.45 + Math.sin(time * 1.5) * 0.02;
 }
 
 // Run all animations for a mural content group

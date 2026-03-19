@@ -29,15 +29,15 @@ export function createTitleSprite(text: string): THREE.Sprite {
   });
 
   const sprite = new THREE.Sprite(material);
-  sprite.scale.set(1.0, 0.25, 1);
-  sprite.position.set(0, 0.65, 0);
+  sprite.scale.set(0.8, 0.2, 1);
+  sprite.position.set(0, 0.45, 0.05);
 
   return sprite;
 }
 
 // Create a pulsing ring that appears around the tracked image
 export function createPulsingRing(): THREE.Mesh {
-  const geometry = new THREE.TorusGeometry(0.45, 0.02, 16, 64);
+  const geometry = new THREE.TorusGeometry(0.35, 0.015, 16, 64);
   const material = new THREE.MeshStandardMaterial({
     color: 0x8b5cf6,
     emissive: 0x8b5cf6,
@@ -47,8 +47,7 @@ export function createPulsingRing(): THREE.Mesh {
   });
 
   const ring = new THREE.Mesh(geometry, material);
-  ring.rotation.x = -Math.PI / 2;
-  ring.position.set(0, 0, 0.01);
+  ring.position.set(0, 0, 0.05);
 
   return ring;
 }
@@ -62,13 +61,13 @@ export function createParticleSystem(count: number = 60): THREE.Points {
   for (let i = 0; i < count; i++) {
     const i3 = i * 3;
     // Spread around the target area
-    positions[i3] = (Math.random() - 0.5) * 0.8;
-    positions[i3 + 1] = Math.random() * 0.6;
-    positions[i3 + 2] = (Math.random() - 0.5) * 0.3;
+    positions[i3] = (Math.random() - 0.5) * 0.5;
+    positions[i3 + 1] = Math.random() * 0.4;
+    positions[i3 + 2] = (Math.random() - 0.5) * 0.1 + 0.05;
 
-    velocities[i3] = (Math.random() - 0.5) * 0.01;
-    velocities[i3 + 1] = 0.005 + Math.random() * 0.015;
-    velocities[i3 + 2] = (Math.random() - 0.5) * 0.01;
+    velocities[i3] = (Math.random() - 0.5) * 0.005;
+    velocities[i3 + 1] = 0.003 + Math.random() * 0.008;
+    velocities[i3 + 2] = (Math.random() - 0.5) * 0.005;
 
     sizes[i] = 2 + Math.random() * 4;
   }
@@ -131,8 +130,8 @@ export function createDiscoveryBadge(): THREE.Sprite {
   });
 
   const sprite = new THREE.Sprite(material);
-  sprite.scale.set(0.5, 0.125, 1);
-  sprite.position.set(0, -0.55, 0);
+  sprite.scale.set(0.4, 0.1, 1);
+  sprite.position.set(0, -0.4, 0.05);
 
   return sprite;
 }

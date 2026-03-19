@@ -28,17 +28,13 @@
 </head>
 <body class="m-0 p-0 overflow-hidden bg-black text-white font-sans">
   <div id="app" class="relative w-screen h-screen overflow-hidden">
-    <!-- QR Scanner View -->
-    <div id="qr-view" class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black">
+    <!-- QR Scanner View (unused, kept for future) -->
+    <div id="qr-view" class="absolute inset-0 z-10 hidden flex flex-col items-center justify-center bg-black">
       <div id="qr-video-container" class="relative w-full h-full"></div>
-      <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-        <div class="w-64 h-64 border-2 border-white/50 rounded-2xl mb-6"></div>
-        <p class="text-white text-lg font-medium px-8 text-center">Point your camera at a QR code to begin</p>
-      </div>
     </div>
 
     <!-- Map View -->
-    <div id="map-view" class="absolute inset-0 z-10 hidden">
+    <div id="map-view" class="absolute inset-0 z-10">
       <div id="map-container" class="w-full h-full"></div>
 
       <!-- Progress bar -->
@@ -75,7 +71,7 @@
     </div>
 
     <!-- Navigation bar -->
-    <nav id="nav-bar" class="fixed bottom-0 inset-x-0 z-40 hidden safe-bottom">
+    <nav id="nav-bar" class="fixed bottom-0 inset-x-0 z-40 safe-bottom">
       <div class="bg-black/80 backdrop-blur-md border-t border-white/10 px-6 py-2 flex justify-around items-center">
         <button id="btn-map" class="nav-btn active flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>

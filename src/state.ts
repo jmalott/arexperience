@@ -5,7 +5,7 @@ type Listener = (state: AppState) => void;
 const listeners: Listener[] = [];
 
 const state: AppState = {
-  currentView: 'qr',
+  currentView: 'map',
   userPosition: null,
   murals: [],
   nearbyMural: null,

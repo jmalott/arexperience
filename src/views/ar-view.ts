@@ -172,14 +172,14 @@ function createTitleSprite(text: string): any {
   const texture = new THREE.CanvasTexture(canvas);
   const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
   const sprite = new THREE.Sprite(material);
-  sprite.scale.set(1.0, 0.25, 1);
-  sprite.position.set(0, 0.65, 0);
+  sprite.scale.set(0.8, 0.2, 1);
+  sprite.position.set(0, 0.45, 0.05);
   sprite.userData.type = 'title';
   return sprite;
 }
 
 function createPulsingRing(): any {
-  const geometry = new THREE.TorusGeometry(0.45, 0.02, 16, 64);
+  const geometry = new THREE.TorusGeometry(0.35, 0.015, 16, 64);
   const material = new THREE.MeshStandardMaterial({
     color: 0x8b5cf6,
     emissive: 0x8b5cf6,
@@ -188,24 +188,23 @@ function createPulsingRing(): any {
     opacity: 0.8,
   });
   const ring = new THREE.Mesh(geometry, material);
-  ring.rotation.x = -Math.PI / 2;
-  ring.position.set(0, 0, 0.01);
+  ring.position.set(0, 0, 0.05);
   ring.userData.type = 'ring';
   return ring;
 }
 
-function createParticleSystem(count: number = 60): any {
+function createParticleSystem(count: number = 40): any {
   const positions = new Float32Array(count * 3);
   const velocities = new Float32Array(count * 3);
 
   for (let i = 0; i < count; i++) {
     const i3 = i * 3;
-    positions[i3] = (Math.random() - 0.5) * 0.8;
-    positions[i3 + 1] = Math.random() * 0.6;
-    positions[i3 + 2] = (Math.random() - 0.5) * 0.3;
-    velocities[i3] = (Math.random() - 0.5) * 0.01;
-    velocities[i3 + 1] = 0.005 + Math.random() * 0.015;
-    velocities[i3 + 2] = (Math.random() - 0.5) * 0.01;
+    positions[i3] = (Math.random() - 0.5) * 0.5;
+    positions[i3 + 1] = Math.random() * 0.4;
+    positions[i3 + 2] = (Math.random() - 0.5) * 0.1 + 0.05;
+    velocities[i3] = (Math.random() - 0.5) * 0.005;
+    velocities[i3 + 1] = 0.003 + Math.random() * 0.008;
+    velocities[i3 + 2] = (Math.random() - 0.5) * 0.005;
   }
 
   const geometry = new THREE.BufferGeometry();
@@ -257,8 +256,8 @@ function createDiscoveryBadge(): any {
   const texture = new THREE.CanvasTexture(canvas);
   const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
   const sprite = new THREE.Sprite(material);
-  sprite.scale.set(0.5, 0.125, 1);
-  sprite.position.set(0, -0.55, 0);
+  sprite.scale.set(0.4, 0.1, 1);
+  sprite.position.set(0, -0.4, 0.05);
   return sprite;
 }
 
@@ -277,10 +276,10 @@ function animateGroup(group: any, time: number, delta: number): void {
         arr[i3] += velocities[i3] * delta * 60;
         arr[i3 + 1] += velocities[i3 + 1] * delta * 60;
         arr[i3 + 2] += velocities[i3 + 2] * delta * 60;
-        if (arr[i3 + 1] > 0.8) {
-          arr[i3] = (Math.random() - 0.5) * 0.8;
+        if (arr[i3 + 1] > 0.5) {
+          arr[i3] = (Math.random() - 0.5) * 0.5;
           arr[i3 + 1] = 0;
-          arr[i3 + 2] = (Math.random() - 0.5) * 0.3;
+          arr[i3 + 2] = (Math.random() - 0.5) * 0.1 + 0.05;
         }
       }
       positions.needsUpdate = true;
@@ -290,7 +289,7 @@ function animateGroup(group: any, time: number, delta: number): void {
       child.material.emissiveIntensity = 0.3 + Math.sin(time * 3) * 0.3;
       child.material.opacity = 0.6 + Math.sin(time * 2) * 0.2;
     } else if (type === 'title') {
-      child.position.y = 0.65 + Math.sin(time * 1.5) * 0.03;
+      child.position.y = 0.45 + Math.sin(time * 1.5) * 0.02;
     }
   }
 }

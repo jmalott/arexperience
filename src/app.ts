@@ -4,7 +4,6 @@ import { MURALS } from './data/murals.ts';
 import { loadDiscoveries } from './utils/storage.ts';
 import { startWatching } from './utils/geolocation.ts';
 import { checkProximity } from './utils/proximity.ts';
-import { initQRView, destroyQRView, skipQR } from './views/qr-view.ts';
 import { initMapView, destroyMapView } from './views/map-view.ts';
 import { initARView, destroyARView } from './views/ar-view.ts';
 import type { ViewName } from './types.ts';
@@ -17,44 +16,13 @@ function init(): void {
     ...m,
     discovered: savedDiscoveries.includes(m.id),
   }));
-  updateState({ murals });
+  updateState({ murals, qrScanned: true });
 
-  const state = getState();
-
-  // Debug mode: skip QR, go straight to map
-  if (state.debugMode) {
-    console.log('[App] Debug mode enabled - skipping QR, proximity override active');
-    onQRScanned();
-    return;
-  }
-
-  // Start with QR view
-  initQRView();
-
-  // Subscribe to state changes for view management
-  let qrHandled = false;
-  subscribe((newState) => {
-    if (!qrHandled && newState.qrScanned && newState.currentView === 'map') {
-      qrHandled = true;
-      onQRScanned();
-    }
-  });
-}
-
-let currentView: ViewName | null = null;
-
-function onQRScanned(): void {
   // Start GPS
   startWatching();
 
   // Subscribe to position changes for proximity checks
   subscribe(() => checkProximity());
-
-  // Show nav bar
-  document.getElementById('nav-bar')!.classList.remove('hidden');
-
-  // Switch to map
-  switchView('map');
 
   // Wire nav buttons
   document.getElementById('btn-map')!.addEventListener('click', () => switchView('map'));
@@ -62,7 +30,12 @@ function onQRScanned(): void {
 
   // Wire proximity toast click
   document.getElementById('proximity-toast-inner')!.addEventListener('click', () => switchView('ar'));
+
+  // Start on map
+  switchView('map');
 }
+
+let currentView: ViewName | null = null;
 
 async function switchView(view: ViewName): Promise<void> {
   if (view === currentView) return;
