@@ -1,4 +1,5 @@
 import tailwind from "bun-plugin-tailwind";
+import { Glob } from "bun";
 
 const result = await Bun.build({
   entrypoints: ["./index.html"],
@@ -13,6 +14,12 @@ if (!result.success) {
     console.error(log);
   }
   process.exit(1);
+}
+
+// Copy public/ files to dist/
+const glob = new Glob("**/*");
+for await (const path of glob.scan("./public")) {
+  await Bun.write(`./dist/${path}`, Bun.file(`./public/${path}`));
 }
 
 console.log(`Built ${result.outputs.length} files to dist/`);
