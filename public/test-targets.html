@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AR Test Targets</title>
+  <style>
+    body { font-family: system-ui; max-width: 600px; margin: 2rem auto; padding: 1rem; background: #111; color: #eee; }
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.1rem; margin-top: 2rem; color: #8b5cf6; }
+    img { max-width: 100%; border: 2px solid #333; border-radius: 8px; margin-top: 0.5rem; }
+    .note { font-size: 0.85rem; color: #999; margin-top: 0.5rem; }
+    a { color: #38bdf8; }
+  </style>
+</head>
+<body>
+  <h1>Mural Discovery - Test Targets</h1>
+  <p>Open this page on a <strong>second device or screen</strong>, then point your phone camera at these images.</p>
+
+  <h2>1. QR Code (starts the experience)</h2>
+  <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=mural-discovery-start" alt="QR Code" />
+  <p class="note">Any QR code works - this one just says "mural-discovery-start".</p>
+
+  <h2>2. AR Image Target (triggers 3D overlay)</h2>
+  <img src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.png" alt="MindAR Demo Card" />
+  <p class="note">This is MindAR's demo card. Point the AR camera at it to see the 3D mural overlay.</p>
+
+  <h2>Quick Start</h2>
+  <ol>
+    <li>Run <code>bun ./index.html</code></li>
+    <li>Open <a href="http://localhost:3000?debug=true">localhost:3000?debug=true</a> on your phone (or use ngrok for HTTPS)</li>
+    <li>Debug mode skips QR &rarr; go to AR Camera tab &rarr; point at the card above</li>
+  </ol>
+</body>
+</html>

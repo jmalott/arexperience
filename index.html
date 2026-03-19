@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>Mural Discovery</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="./src/styles.css" />
+  <!-- Import map so MindAR's ESM imports resolve correctly -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <!-- Load Three.js + MindAR as ES modules, expose as globals for our app -->
+  <script type="module">
+    import * as THREE from 'three';
+    window.THREE = THREE;
+    const mindar = await import('https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js');
+    window.MINDAR = { IMAGE: { MindARThree: mindar.MindARThree } };
+    window.dispatchEvent(new Event('ar-libs-ready'));
+  </script>
+</head>
+<body class="m-0 p-0 overflow-hidden bg-black text-white font-sans">
+  <div id="app" class="relative w-screen h-screen overflow-hidden">
+    <!-- QR Scanner View -->
+    <div id="qr-view" class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black">
+      <div id="qr-video-container" class="relative w-full h-full"></div>
+      <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+        <div class="w-64 h-64 border-2 border-white/50 rounded-2xl mb-6"></div>
+        <p class="text-white text-lg font-medium px-8 text-center">Point your camera at a QR code to begin</p>
+      </div>
+    </div>
+
+    <!-- Map View -->
+    <div id="map-view" class="absolute inset-0 z-10 hidden">
+      <div id="map-container" class="w-full h-full"></div>
+
+      <!-- Progress bar -->
+      <div id="progress-bar" class="absolute top-0 inset-x-0 z-30 bg-black/70 backdrop-blur-sm px-4 py-3 safe-top">
+        <div class="flex items-center gap-3">
+          <span id="progress-text" class="text-white text-sm font-medium whitespace-nowrap">0/0 Discovered</span>
+          <div class="flex-1 h-2 bg-white/20 rounded-full overflow-hidden">
+            <div id="progress-fill" class="h-full bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Proximity toast -->
+      <div id="proximity-toast" class="absolute top-16 inset-x-4 z-30 hidden">
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl px-4 py-3 shadow-lg flex items-center gap-3 cursor-pointer" id="proximity-toast-inner">
+          <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-xl shrink-0">🎨</div>
+          <div class="flex-1 min-w-0">
+            <p id="proximity-mural-name" class="text-white font-semibold text-sm truncate"></p>
+            <p class="text-white/80 text-xs">Tap to view in AR!</p>
+          </div>
+          <svg class="w-5 h-5 text-white/60 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- AR View -->
+    <div id="ar-view" class="absolute inset-0 z-10 hidden">
+      <div id="ar-container" class="w-full h-full"></div>
+      <div id="ar-status" class="absolute top-4 inset-x-4 z-30 safe-top">
+        <div class="bg-black/60 backdrop-blur-sm rounded-xl px-4 py-2 text-center">
+          <p id="ar-status-text" class="text-white text-sm">Looking for mural...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation bar -->
+    <nav id="nav-bar" class="fixed bottom-0 inset-x-0 z-40 hidden safe-bottom">
+      <div class="bg-black/80 backdrop-blur-md border-t border-white/10 px-6 py-2 flex justify-around items-center">
+        <button id="btn-map" class="nav-btn active flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+          <span class="text-xs font-medium">Map</span>
+        </button>
+        <button id="btn-ar" class="nav-btn flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><circle cx="12" cy="13" r="3"/></svg>
+          <span class="text-xs font-medium">AR Camera</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <script type="module" src="./src/app.ts"></script>
+</body>
+</html>

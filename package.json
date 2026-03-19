@@ -1,0 +1,26 @@
+{
+  "name": "arexperience",
+  "module": "src/app.ts",
+  "scripts": {
+    "dev": "bun ./index.html",
+    "build": "bun run build.ts"
+  },
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.2",
+    "@types/bun": "latest",
+    "@types/leaflet": "^1.9.21",
+    "@types/three": "^0.183.1",
+    "bun-plugin-tailwind": "^0.1.2",
+    "tailwindcss": "^4.2.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.4",
+    "qr-scanner": "^1.4.2",
+    "three": "^0.183.2"
+  }
+}
